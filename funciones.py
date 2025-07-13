@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image, ImageDraw, ImageFont
 
 class planos:
     """
@@ -110,6 +111,40 @@ class planos:
         plt.suptitle(título)
         plt.tight_layout()
         plt.show()
+    def asignar_objeto(self, nombre, matriz):
+        """
+        Asigna una estructura personalizada como parte del plano.
+
+        nombre : str
+            Nombre del objeto
+        matriz : ndarray
+            Campo a guardar
+        """
+        if not hasattr(self, "objetos"):
+            self.objetos = {}
+        self.objetos[nombre] = matriz
+    def letra(self, letra: str, tamaño_fuente: int):
+        """
+        Genera un plano con una letra en fuente Free sans.
+        Es importante verificar que se puede acceder a la fuente
+
+        letra : str
+            Letra en la imagen
+        tamaño fuente : ndarray
+            Altura, en píxeles, de la letra.
+            
+        Return:
+            matriz : ndarray con la imagen de la letra.
+        """
+        
+        img = Image.new('L', (self.N,self.N), color = 0)
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype("C:\Proyectos\Simulaciones\FreeSans-LrmZ.ttf", size = tamaño_fuente)
+        draw.text((256,0), letra, fill = 255, font=font)
+        matriz = np.array(img)/255
+        return matriz
+
+    
 class propagacion:
     """
     Clase para simular la propación de los campos de objetos planos cuadrados en el montaje óptico.
@@ -153,5 +188,6 @@ class propagacion:
         u2 = np.fft.ifft2(U1*H)
 
         return u2
+    
     
 
