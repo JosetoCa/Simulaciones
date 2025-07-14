@@ -10,7 +10,7 @@ p = funciones.planos()
 prop = funciones.propagacion()
 
 matriz_A = p.letra("A", 900)
-matriz_B = p.letra("D", 900)
+matriz_B = p.letra("A", 900)
 
 A_prop = prop.propaTF(matriz_A, z = f)
 A_lente = A_prop*p.lente_delgado_centrado(f = f)
@@ -28,7 +28,7 @@ p.mostrar_campo(U2 )
 
 
 
-plt.imshow(np.abs(fftconvolve(matriz_A, matriz_B, mode = "same")), cmap='gray')
+plt.imshow(np.abs(fftconvolve(np.flipud(np.fliplr(matriz_B)), matriz_A , mode = "same")), cmap='gray')
 plt.colorbar()
 plt.show()
 
