@@ -123,6 +123,34 @@ class planos:
         if not hasattr(self, "objetos"):
             self.objetos = {}
         self.objetos[nombre] = matriz
+    def sumar(self, matriz1, matriz2, separacion, direccion = "v"):
+        """"
+        Genera una sola matriz a partir de dos matrices de igual dimensión 
+
+        matriz1 : ndarray
+        matriz2 : ndarray
+        separacion : int
+            qué tanto se mueve una matriz del centro desde su borde.
+        direccion : str
+            h = se juntan en x.
+            v = se juntan en y.
+        """
+        if matriz1.shape != matriz2.shape:
+            raise ValueError("el tamaño de las matrices es distinto.")
+        suma = np.zeros(((2 * matriz1.shape[0] + 2*separacion), (2 * matriz1.shape[0] + 2*separacion)))
+        suma1 = np.zeros(((2 * matriz1.shape[0] + 2*separacion), (2 * matriz1.shape[0] + 2*separacion)))
+        suma2 = np.zeros(((2 * matriz1.shape[0] + 2*separacion), (2 * matriz1.shape[0] + 2*separacion)))
+        
+        if direccion == "v":
+            
+            suma1[:matriz1.shape[0], (matriz1.shape[0]//2 + separacion):(matriz1.shape[0]//2 + separacion +matriz1.shape[0])] = matriz1
+            suma2[(2*separacion+matriz1.shape[0]):,(matriz1.shape[0]//2 + separacion):(matriz1.shape[0]//2 + separacion +matriz1.shape[0])] = matriz2
+            suma = suma1 + suma2
+        if direccion == "h":
+            suma1[(matriz1.shape[0]//2 + separacion):(matriz1.shape[0]//2 + separacion +matriz1.shape[0]), :matriz1.shape[1]] = matriz1
+            suma2[(matriz1.shape[0]//2 + separacion):(matriz1.shape[0]//2 + separacion +matriz1.shape[0]), (2*separacion+matriz1.shape[1]):] = matriz2
+            suma = suma1 + suma2
+        return suma
     def letra(self, letra: str, tamaño_fuente: int):
         """
         Genera un plano con una letra en fuente Free sans.
@@ -140,7 +168,7 @@ class planos:
         img = Image.new('L', (self.N,self.N), color = 0)
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype("C:\Proyectos\Simulaciones\FreeSans-LrmZ.ttf", size = tamaño_fuente)
-        draw.text((256,0), letra, fill = 255, font=font)
+        draw.text(((self.N-tamaño_fuente)//2,(self.N-tamaño_fuente)//2), letra, fill = 255, font=font)
         matriz = np.array(img)/255
         return matriz
 
