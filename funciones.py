@@ -171,6 +171,15 @@ class planos:
         draw.text(((self.N-tamaño_fuente)//2,(self.N-tamaño_fuente)//2), letra, fill = 255, font=font)
         matriz = np.array(img)/255
         return matriz
+    def recorte(self, ruta : str, ancho : float):
+        l_pix = int(round(ancho * self.N / self.tamaño_mm)) # lado en píxeles
+        imagen = Image.open(ruta).convert('L')
+        imagen = np.array(imagen)
+        negro = np.zeros((self.N, self.N))
+        i0 = int((self.N - l_pix) / 2)
+        i1 = int((self.N + l_pix) / 2)
+        negro[i0:i1, i0:i1] = imagen[i0:i1, i0:i1]
+        return negro
 
     
 class propagacion:
